@@ -188,7 +188,7 @@ def record_exists(recID):
     """
     try: # if recid is '123foo', mysql will return id=123, and we don't want that
         recID = int(recID)
-    except ValueError:
+    except (ValueError, TypeError):
         return 0
 
     out = 0
