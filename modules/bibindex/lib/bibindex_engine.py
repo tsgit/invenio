@@ -1320,7 +1320,7 @@ def task_submit_elaborate_specific_parameter(key, value, opts, args):
     elif key in ("-f", "--flush"):
         task_set_option("flush", int(value))
     elif key in ("--apply-reindex-tables"):
-        task_set_option("apply-reindex-tables", int(value))
+        task_set_option("apply-reindex-tables", True)
     else:
         return False
     return True
