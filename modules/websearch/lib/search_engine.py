@@ -4696,7 +4696,7 @@ def print_records(req, recIDs, jrec=1, rg=CFG_WEBSEARCH_DEF_RECORDS_IN_GROUPS, f
                                                                                       tabs,
                                                                                       ln))
 
-                    elif tab == 'hepdata':
+                    elif tab == 'data':
                         req.write(webstyle_templates.detailed_record_container_top(recIDs[irec],
                                                                                    tabs,
                                                                                    ln, include_jquery = True,
