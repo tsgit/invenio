@@ -1533,8 +1533,11 @@ class WordTable(AbstractIndexTable):
                 value[word][recID] = sign
             else:
                 value[word] = {recID: sign}
-        except:
-            write_message("Error: Cannot put word %s with sign %d for recID %s." % (word, sign, recID))
+        except Exception as e:
+            write_message(
+                "Error: Cannot put word %s with sign %d for recID %s (%s)."
+                % (word, sign, recID, repr(e))
+            )
 
 
     def del_recIDs(self, recIDs):
