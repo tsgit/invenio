@@ -104,11 +104,11 @@ def retry_if_precache_error(exception):
 
 
 @retry(
-    wait_exponential_multiplier=250,
-    wait_exponential_max=8000,
+    wait_exponential_multiplier=125,
+    wait_exponential_max=6000,
     retry_on_exception=retry_if_precache_error,
     wrap_exception=True,
-    stop_max_attempt_number=14
+    stop_max_attempt_number=15
 )
 def update_cache(name, key, target, *args):
     '''
