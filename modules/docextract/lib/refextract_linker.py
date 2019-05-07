@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##
 ## This file is part of Invenio.
-## Copyright (C) 2005, 2006, 2007, 2008, 2009, 2010, 2011 CERN.
+## Copyright (C) 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2019 CERN.
 ##
 ## Invenio is free software; you can redistribute it and/or
 ## modify it under the terms of the GNU General Public License as
@@ -73,6 +73,8 @@ def find_reportnumber(citation_element):
 
 def find_doi(citation_element):
     doi_string = citation_element['doi_string']
+    if doi_string.lower().startswith(('doi:', 'hdl:')) and len(doi_string) > 4:
+        doi_string = doi_string[4:]
     recids = get_recids_matching_query(doi_string, 'doi')
     return recids if len(recids) == 1 else []
 
