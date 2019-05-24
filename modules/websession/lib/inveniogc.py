@@ -1,7 +1,7 @@
 ## -*- mode: python; coding: utf-8; -*-
 ##
 ## This file is part of Invenio.
-## Copyright (C) 2007, 2008, 2010, 2011, 2012, 2016 CERN.
+## Copyright (C) 2007, 2008, 2010, 2011, 2012, 2016, 2018, 2019 CERN.
 ##
 ## Invenio is free software; you can redistribute it and/or
 ## modify it under the terms of the GNU General Public License as
@@ -65,6 +65,8 @@ CFG_MAX_ATIME_RM_OAI = 14
 # After how many days to zip obsolete oaiharvest fmt xml files
 CFG_MAX_ATIME_ZIP_OAI = 3
 # After how many days to remove deleted bibdocs
+# supposed to be 10 years !? mysql ADDTIME only goes to 34 days
+# because time is a mediumint 3 bytes signed
 CFG_DELETED_BIBDOC_MAXLIFE = 365 * 10
 # After how many day to remove old cached webjournal files
 CFG_WEBJOURNAL_TTL = 7
@@ -334,8 +336,12 @@ def optimise_tables():
         if table_name == 'bibfmt':
         # inspire production: requires ~30G of temp space and 4 hours
             continue
-        write_message("optimising table %s" % table_name)
-        run_sql("OPTIMIZE TABLE %s" % wash_table_column_name(table_name)) # kwalitee: disable=sql
+        elif table_name == 'aidPERSONIDPAPERS':
+            write_message("optimising table %s" % table_name)
+            run_sql("OPTIMIZE LOCAL TABLE %s" % wash_table_column_name(table_name)) # kwalitee: disable=sql
+        else:
+            write_message("optimising table %s" % table_name)
+            run_sql("OPTIMIZE TABLE %s" % wash_table_column_name(table_name)) # kwalitee: disable=sql
 
 def clean_sessions():
     """
