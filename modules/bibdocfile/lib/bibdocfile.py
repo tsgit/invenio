@@ -1,5 +1,5 @@
 ## This file is part of Invenio.
-## Copyright (C) 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2018 CERN.
+## Copyright (C) 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2018, 2019 CERN.
 ##
 ## Invenio is free software; you can redistribute it and/or
 ## modify it under the terms of the GNU General Public License as
@@ -4901,6 +4901,7 @@ def open_url(url, headers=None, head_request=False):
             'csrf_token': csrf_token,
         })
         req = s.get(url, stream=True)
+        req.raise_for_status()
         req.raw.decode_content = True
         return req.raw
 
