@@ -51,7 +51,7 @@
 				{{ item.display_name }}{{ ' (%s)' % item.native_name if item.native_name }}
 			</h4>
 			<div class="list-group-item-text clearfix">
-				{{ (item.institution_history|last).name if item.institution_history else 'Institution not known.' }}
+				{{ (item.institution_history|first).name if item.institution_history else 'Institution not known.' }}
 				{% if item.author_profile %}
 				<div class="pull-right bai-quick-view">
 					<span class="bai-quick-view-spot">
