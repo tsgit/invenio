@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # This file is part of Invenio.
-# Copyright (C) 2011, 2012, 2013, 2014, 2015, 2016, 2018 CERN.
+# Copyright (C) 2011, 2012, 2013, 2014, 2015, 2016, 2018, 2019 CERN.
 #
 # Invenio is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License as
@@ -3396,7 +3396,7 @@ def connect_author_with_orcid(cname, orcid, uid):
     subject = "ORCiD record match: %s %s" % (cname, orcid)
     content = "Hello! Please connect the author profile " \
               "%s/author/profile/%s " \
-              "with the Orcid record http://www.orcid.org/%s" \
+              "with the Orcid record https://orcid.org/%s" \
               ". Best regards" % (CFG_SITE_URL, cname, orcid)
 
     requestor = get_email(uid)

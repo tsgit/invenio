@@ -1,7 +1,7 @@
 ## -*- coding: utf-8 -*-
 #
 # This file is part of Invenio.
-# Copyright (C) 2011, 2018 CERN.
+# Copyright (C) 2011, 2018, 2019 CERN.
 #
 # Invenio is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License as
@@ -2139,7 +2139,7 @@ It holds a record of all your research activities. You can add your ORCID to all
         if orcid_data['orcids']:
             html_orcid += _(
                 'This profile is already connected to the following ORCID: <strong>%s</strong></br><br>' %
-                (",".join(['<a rel="nofollow" href="http://www.orcid.org/' + orcidid + '"">' + orcidid + '</a>' for orcidid in orcid_data['orcids']]),))
+                (",".join(['<a rel="nofollow" href="https://orcid.org/' + orcidid + '"">' + orcidid + '</a>' for orcidid in orcid_data['orcids']]),))
             if orcid_data['push']:
                 html_orcid += '<div class="btn-group" role="group">'
                 html_orcid += '<button class="btn btn-default" data-toggle="modal" data-target="#orcidPushHelp">%s</button> ' % (
