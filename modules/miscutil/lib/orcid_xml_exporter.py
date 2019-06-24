@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 ## This file is part of Invenio.
-## Copyright (C) 2014 CERN.
+## Copyright (C) 2014, 2019 CERN.
 ##
 ## Invenio is free software; you can redistribute it and/or
 ## modify it under the terms of the GNU General Public License as
@@ -50,10 +50,10 @@ class OrcidXmlExporter(object):
             * work_citation - a pair (tuple):
                 1). type - string
                 2). citation - string in correct format
-                See http://support.orcid.org/knowledgebase/articles/
+                See https://support.orcid.org/knowledgebase/articles/
                 135758-anatomy-of-a-citation
             * work_type - string
-              See http://support.orcid.org/knowledgebase/articles/118795
+              See https://support.orcid.org/knowledgebase/articles/118795
             * publication_date - a dictionary:
                 - year - four digit integer - required
                 - month - two digit integer - required if day is provided
@@ -61,7 +61,7 @@ class OrcidXmlExporter(object):
             * work_external_identifiers - a list of pairs (tuples):
                 1). type - string
                 2). id - string
-                See http://support.orcid.org/knowledgebase/articles/118807
+                See https://support.orcid.org/knowledgebase/articles/118807
                 for available types
             * url - string in anyURI format.
               See http://www.datypic.com/sc/xsd/t-xsd_anyURI.html
@@ -71,7 +71,7 @@ class OrcidXmlExporter(object):
                 - name - string
                 - email - string
                 - attributes - a dictionary with "role" and/or "sequence" keys
-                See http://support.orcid.org/knowledgebase/articles/
+                See https://support.orcid.org/knowledgebase/articles/
                 118843-anatomy-of-a-contributor for details
             * work-source - string with ORCID
             * language_code - string (eg. "en")

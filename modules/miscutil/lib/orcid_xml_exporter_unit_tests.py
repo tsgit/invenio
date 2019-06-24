@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##
 ## This file is part of Invenio.
-## Copyright (C) 2014 CERN.
+## Copyright (C) 2014, 2019 CERN.
 ##
 ## Invenio is free software; you can redistribute it and/or
 ## modify it under the terms of the GNU General Public License as
@@ -99,7 +99,7 @@ class TestWorkExporter(InvenioTestCase):
                 "month" : 11
             },
             "work_external_identifiers" : [("other-id", "1234")],
-            "url" : "www.orcid.org",
+            "url" : "orcid.org",
             "contributors" : [{
                 "name" : "LastName, FirstName",
                 "attributes" : {

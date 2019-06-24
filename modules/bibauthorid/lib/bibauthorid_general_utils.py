@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # This file is part of Invenio.
-# Copyright (C) 2011 CERN.
+# Copyright (C) 2011, 2019 CERN.
 #
 # Invenio is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License as
@@ -153,7 +153,7 @@ def get_orcid_from_string(identifier, uri=False):
     handling ORCIDs based on the string representation of a valid ORCID.
 
     Passing True to the uri key will ensure that the function returns a
-    valid ORCID with the http://orcid.org prefix as per the specification.
+    valid ORCID with the https://orcid.org prefix as per the specification.
 
     @param identifier: Target string to extract from.
     @param uri: True to return an ORCID URI, None defaults to return the ORCID.
@@ -163,7 +163,7 @@ def get_orcid_from_string(identifier, uri=False):
     if result is None:
         return None
     elif uri:
-        return "http://orcid.org/" + result.group(2)
+        return "https://orcid.org/" + result.group(2)
     else:
         return result.group(2)
 
