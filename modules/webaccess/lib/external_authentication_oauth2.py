@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##
 ## This file is part of Invenio.
-## Copyright (C) 2012 CERN.
+## Copyright (C) 2012, 2019 CERN.
 ##
 ## Invenio is free software; you can redistribute it and/or
 ## modify it under the terms of the GNU General Public License as
@@ -22,15 +22,12 @@ This module contains functions and methods to authenticate with OAuth2
 providers.
 """
 
-__revision__ = \
-    "$Id$"
-
 import requests
 from urllib import urlencode
 from rauth.service import process_token_request
 
 from invenio.jsonutils import json, json_unicode_to_utf8
-from invenio.config import CFG_SITE_URL
+from invenio.config import CFG_SITE_SECURE_URL
 from invenio.external_authentication import ExternalAuth
 from invenio.containerutils import get_substructure
 
@@ -122,7 +119,7 @@ class ExternalOAuth2(ExternalAuth):
                     grant_type = "authorization_code",
                     # Construct redirect uri without having '/' character at the
                     # left most of SITE_SECURE_URL
-                    redirect_uri =  CFG_SITE_URL + '/youraccount/login?' +
+                    redirect_uri =  CFG_SITE_SECURE_URL + '/youraccount/login?' +
                         urlencode({'login_method': 'oauth2',
                                    'provider': req.g['oauth2_provider_name'],
                                   })
