@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##
 ## This file is part of Invenio.
-## Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2014 CERN.
+## Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2014, 2019 CERN.
 ##
 ## Invenio is free software; you can redistribute it and/or
 ## modify it under the terms of the GNU General Public License as
@@ -19,10 +19,6 @@
 from invenio.webstat import register_customevent
 
 """Invenio ACCOUNT HANDLING"""
-
-__revision__ = "$Id$"
-
-__lastupdated__ = """$Date$"""
 
 import cgi
 from datetime import timedelta
@@ -1333,7 +1329,7 @@ class WebInterfaceYourAccountPages(WebInterfaceDirectory):
         # Construct the authorization url
         params = config.get('authorize_parameters', {})
         params['redirect_uri'] = '%s/youraccount/login?login_method=oauth2\
-&provider=%s' % (CFG_SITE_URL, args['provider'])
+&provider=%s' % (CFG_SITE_SECURE_URL, args['provider'])
         if args['scope']:
             params['scope'] = args['scope']
         url = provider.get_authorize_url(**params)
