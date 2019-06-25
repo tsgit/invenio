@@ -2184,7 +2184,7 @@ It holds a record of all your research activities. You can add your ORCID to all
         else:
             html_orcid += "This profile has not been connected to an ORCID account yet. "
             if orcid_data['arxiv_login'] and (orcid_data['own_profile'] or orcid_data['add_power']):
-                add_link = "%s/youraccount/oauth2?provider=%s" % (CFG_SITE_URL, 'orcid')
+                add_link = "%s/youraccount/oauth2?provider=%s" % (CFG_SITE_SECURE_URL, 'orcid')
                 add_text = _("Connect an ORCID to this profile")
                 html_orcid += '<br><br><a rel="nofollow" href="%s" class="btn btn-default">%s</a>' % (
                     add_link, add_text)
