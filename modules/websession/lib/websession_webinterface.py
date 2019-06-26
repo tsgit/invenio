@@ -20,6 +20,8 @@ from invenio.webstat import register_customevent
 
 """Invenio ACCOUNT HANDLING"""
 
+__lastupdated__ = """$Date$"""
+
 import cgi
 from datetime import timedelta
 import os
