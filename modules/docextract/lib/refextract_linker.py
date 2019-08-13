@@ -33,10 +33,10 @@ def config_cache(cache={}):
     return cache['config']
 
 
-def get_recids_matching_query(p, f, m='e'):
+def get_recids_matching_query(p, f, m='e', ap=1):
     """Return list of recIDs matching query for pattern and field."""
     config = config_cache()
-    recids = bibrank_search(p=p.encode('utf-8'), f=f, config=config, m=m)
+    recids = bibrank_search(p=p.encode('utf-8'), f=f, config=config, m=m, ap=ap)
     return list(recids)
 
 
@@ -67,7 +67,7 @@ def find_journal(citation_element):
 
 def find_reportnumber(citation_element):
     reportnumber = standardize_report_number(citation_element['report_num'])
-    recids = get_recids_matching_query(reportnumber, 'reportnumber')
+    recids = get_recids_matching_query(reportnumber, 'reportnumber', ap=0)
     return recids if len(recids) == 1 else []
 
 
