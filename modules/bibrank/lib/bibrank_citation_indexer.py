@@ -941,7 +941,8 @@ def ref_analyzer(citation_informations, updated_recids, tags, config):
             # Search for "hep-th/5644654 or such" in existing records
             recids = get_recids_matching_query(p=refnumber,
                                                f=field,
-                                               config=config)
+                                               config=config,
+                                               ap=0)
             write_message("These match searching %s in %s: %s" %
                                    (refnumber, field, list(recids)), verbose=9)
 
