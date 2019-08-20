@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ## This file is part of Invenio.
-## Copyright (C) 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015 CERN.
+## Copyright (C) 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2019 CERN.
 ##
 ## Invenio is free software; you can redistribute it and/or
 ## modify it under the terms of the GNU General Public License as
@@ -297,8 +297,8 @@ class Template:
             'rft.series' : (str, ''),
     }
 
-    tmpl_opensearch_rss_url_syntax = "%(CFG_BASE_URL)s/rss?p={searchTerms}&amp;jrec={startIndex}&amp;rg={count}&amp;ln={language}" % {'CFG_BASE_URL': CFG_BASE_URL}
-    tmpl_opensearch_html_url_syntax = "%(CFG_BASE_URL)s/search?p={searchTerms}&amp;jrec={startIndex}&amp;rg={count}&amp;ln={language}" % {'CFG_BASE_URL': CFG_BASE_URL}
+    tmpl_opensearch_rss_url_syntax = "%(CFG_BASE_URL)s/rss?p={searchTerms}&amp;jrec={startIndex}&amp;rg={count}&amp;ln={language}" % {'CFG_BASE_URL': CFG_SITE_URL}
+    tmpl_opensearch_html_url_syntax = "%(CFG_BASE_URL)s/search?p={searchTerms}&amp;jrec={startIndex}&amp;rg={count}&amp;ln={language}" % {'CFG_BASE_URL': CFG_SITE_URL}
 
     def tmpl_openurl2invenio(self, openurl_data):
         """ Return an Invenio url corresponding to a search with the data
