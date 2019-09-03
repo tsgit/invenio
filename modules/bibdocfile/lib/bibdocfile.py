@@ -41,8 +41,6 @@ This module implements the low-level API for dealing with fulltext files.
 @group Configuration Variables: CFG_*
 """
 
-__revision__ = "$Id$"
-
 import os
 import re
 import shutil
@@ -55,11 +53,13 @@ import urllib
 import tempfile
 import cPickle
 import base64
-import bs4
 import requests
 import binascii
 import cgi
 import sys
+
+import requests.packages.urllib3
+requests.packages.urllib3.disable_warnings()
 
 if sys.hexversion < 0x2060000:
     from md5 import md5
@@ -122,7 +122,7 @@ from invenio.config import CFG_SITE_URL, \
     CFG_BIBDOCFILE_PREFERRED_MIMETYPES_MAPPING, \
     CFG_BIBCATALOG_SYSTEM, \
     CFG_LABS_HOSTNAME, \
-    CFG_LABS_CREDENTIALS_FILE
+    CFG_LABS_FFT_TOKEN
 from invenio.bibcatalog import BIBCATALOG_SYSTEM
 from invenio.bibdocfile_config import CFG_BIBDOCFILE_ICON_SUBFORMAT_RE, \
     CFG_BIBDOCFILE_DEFAULT_ICON_SUBFORMAT
@@ -4857,16 +4857,6 @@ def read_cookie(cookiefile):
     return cookie_data
 
 
-def _load_inspire_legacy_credentials():
-    if CFG_LABS_CREDENTIALS_FILE is None:
-        return None, None
-    with open(CFG_LABS_CREDENTIALS_FILE) as fp:
-        row = fp.readline()
-    user, password = row.split(':', 1)
-    password = base64.b64decode(password)
-    return user, password
-
-
 def open_url(url, headers=None, head_request=False):
     """
     Opens a URL. If headers are passed as argument, no check is performed and
@@ -4889,18 +4879,10 @@ def open_url(url, headers=None, head_request=False):
         # avoid external ssl redirect for labs
         url = url.replace('http://{0}/'.format(CFG_LABS_HOSTNAME),
                           'https://{0}/'.format(CFG_LABS_HOSTNAME))
-        user, password = _load_inspire_legacy_credentials()
         s = requests.Session()
         s.headers['User-Agent'] = make_user_agent_string('bibdocfile')
-        login_page = s.get("https://%s/login/?local=1" % CFG_LABS_HOSTNAME)
-        soup = bs4.BeautifulSoup(login_page.text)
-        csrf_token = soup.find(id='csrf_token').get('value')
-        dummy = s.post("https://%s/login/?local=1" % CFG_LABS_HOSTNAME, data={
-            'email': user,
-            'password': password,
-            'csrf_token': csrf_token,
-        })
-        req = s.get(url, stream=True)
+        s.headers['Authorization'] = "Bearer {0}".format(CFG_LABS_FFT_TOKEN)
+        req = s.get(url, stream=True, verify=False)
         req.raise_for_status()
         req.raw.decode_content = True
         return req.raw
