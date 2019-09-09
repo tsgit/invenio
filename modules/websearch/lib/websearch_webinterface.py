@@ -1023,6 +1023,10 @@ class WebInterfaceRSSFeedServicePages(WebInterfaceDirectory):
         argd = wash_urlargd(form, default_params)
         user_info = collect_user_info(req)
 
+        if argd['cc'] == 'Jobs' or 'Jobs' in argd['c']:
+            return redirect_to_url(req, 'https://labs.inspirehep.net/jobs',
+                                   apache.HTTP_GONE)
+
         for coll in argd['c'] + [argd['cc']]:
             if collection_restricted_p(coll):
                 (auth_code, auth_msg) = acc_authorize_action(user_info, VIEWRESTRCOLL, collection=coll)
