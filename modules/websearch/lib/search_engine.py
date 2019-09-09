@@ -5647,7 +5647,7 @@ def prs_perform_search(kwargs=None, **dummy):
     if not out:
         return out
     if ('Jobs' in kwargs['colls_to_display'] or 'Jobs' in kwargs['colls_to_search']) and kwargs['req']:
-        if kwargs['recid']:
+        if kwargs['recid'] and kwargs['recid'] > 0:
             return redirect_to_url(kwargs['req'], 'https://labs.inspirehep.net/jobs/{0}'.format(kwargs['recid']),
                                    apache.HTTP_MOVED_PERMANENTLY)
         else:
