@@ -2,7 +2,7 @@
 
 ## This file is part of Invenio.
 ## Copyright (C) 2003, 2004, 2005, 2006, 2007, 2008, 2009,
-##               2010, 2011, 2012, 2013, 2014, 2015, 2016, 2018 CERN.
+##               2010, 2011, 2012, 2013, 2014, 2015, 2016, 2018, 2019 CERN.
 ##
 ## Invenio is free software; you can redistribute it and/or
 ## modify it under the terms of the GNU General Public License as
@@ -134,6 +134,7 @@ from invenio.errorlib import register_exception
 from invenio.textutils import encode_for_xml, wash_for_utf8, strip_accents, translate_to_ascii
 from invenio.htmlutils import get_mathjax_header
 from invenio.htmlutils import nmtoken_from_string
+from invenio.urlutils import redirect_to_url
 from invenio import bibrecord
 
 import invenio.template
@@ -5645,6 +5646,13 @@ def prs_perform_search(kwargs=None, **dummy):
     out = prs_wash_arguments_colls(kwargs=kwargs, **kwargs)
     if not out:
         return out
+    if ('Jobs' in kwargs['colls_to_display'] or 'Jobs' in kwargs['colls_to_search']) and kwargs['req']:
+        if kwargs['recid']:
+            return redirect_to_url(kwargs['req'], 'https://labs.inspirehep.net/jobs/{0}'.format(kwargs['recid']),
+                                   apache.HTTP_MOVED_PERMANENTLY)
+        else:
+            return redirect_to_url(kwargs['req'], 'https://labs.inspirehep.net/jobs',
+                                   apache.HTTP_MOVED_PERMANENTLY)
     return prs_search(kwargs=kwargs, **kwargs)
 
 
