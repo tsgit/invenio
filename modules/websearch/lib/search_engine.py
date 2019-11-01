@@ -3770,6 +3770,7 @@ def get_fieldvalues_alephseq_like(recID, tags_in, can_see_hidden=False):
                     dict_of_tags_out["%d%d%%" % (i, j)] = 1
         else:
             for tag in tags_in:
+                tag = tag.strip()
                 if len(tag) == 0:
                     for i in range(0, 10):
                         for j in range(0, 10):
@@ -3800,7 +3801,7 @@ def get_fieldvalues_alephseq_like(recID, tags_in, can_see_hidden=False):
             bx = "bib%sx" % digits
             bibx = "bibrec_bib%sx" % digits
             query = "SELECT b.tag,b.value,bb.field_number FROM %s AS b, %s AS bb "\
-                    "WHERE bb.id_bibrec=%%s AND b.id=bb.id_bibxxx AND b.tag LIKE %%s"\
+                    "WHERE bb.id_bibrec=%%s AND b.id=bb.id_bibxxx AND b.tag LIKE %%s "\
                     "ORDER BY bb.field_number, b.tag ASC" % (bx, bibx)
             res = run_sql(query, (recID, str(tag)+'%'))
             # go through fields:
