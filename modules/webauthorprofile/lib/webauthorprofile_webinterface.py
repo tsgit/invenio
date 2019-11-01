@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##
 ## This file is part of Invenio.
-## Copyright (C) 2011, 2018 CERN.
+## Copyright (C) 2011, 2018, 2019 CERN.
 ##
 ## Invenio is free software; you can redistribute it and/or
 ## modify it under the terms of the GNU General Public License as
@@ -460,6 +460,9 @@ class WebAuthorPages(WebInterfaceDirectory):
 
         context["visible"] = AID_VISIBILITY
         context["element_width"] = self.render_width_dict
+        hndata = get_hepnames_data(self.person_id)
+        if hndata[1] is True:
+            context["hnrecid"] = get_hepnames_data(self.person_id)[0].get('record', {}).get('record_id')
 
         body = profile_page.get_wrapped_body("profile_page", context)
         return page(title=page_title,
