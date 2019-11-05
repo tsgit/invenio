@@ -24,7 +24,7 @@ import os
 import datetime
 import time
 import sys
-from urllib import quote
+from urllib import quote, quote_plus
 from invenio import webinterface_handler_config as apache
 import threading
 
@@ -126,6 +126,8 @@ def wash_search_urlargd(form):
     Create canonical search arguments from those passed via web form.
     """
 
+    if 'searchlabs' in form:
+        form['action'] = 'searchlabs'
     argd = wash_urlargd(form, search_results_default_urlargd)
     if argd.has_key('as'):
         argd['aas'] = argd['as']
@@ -507,6 +509,11 @@ class WebInterfaceSearchResultsPages(WebInterfaceDirectory):
         # Keep all the arguments, they might be reused in the
         # search_engine itself to derivate other queries
         req.argd = argd
+
+        if "searchlabs" in form:
+            # redirect to labs
+            redirect_to_url(req, 'https://labs.inspirehep.net/literature?q={0}'.format(
+                quote_plus(argd['p'])))
 
         # mod_python does not like to return [] in case when of=id:
         out = perform_request_search(req, **argd)
