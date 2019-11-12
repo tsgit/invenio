@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##
 ## This file is part of Invenio.
-## Copyright (C) 2009, 2010, 2011 CERN.
+## Copyright (C) 2009, 2010, 2011, 2019 CERN.
 ##
 ## Invenio is free software; you can redistribute it and/or
 ## modify it under the terms of the GNU General Public License as
@@ -687,7 +687,7 @@ def upload_step(repository, active_files_list, uploaded_task_ids=None, *args, **
     final_exit_code = 0
     # Get a random sequence ID that will allow for the tasks to be
     # run in order, regardless if parallel task execution is activated
-    sequence_id = random.randrange(1, 4294967296)
+    sequence_id = random.randrange(1, 2147483648)
     for active_file in active_files_list:
         task_sleep_now_if_required()
         i += 1
