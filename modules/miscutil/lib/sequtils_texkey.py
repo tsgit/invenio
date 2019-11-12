@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##
 ## This file is part of Invenio.
-## Copyright (C) 2012, 2013, 2015, 2016 CERN.
+## Copyright (C) 2012, 2013, 2015, 2016, 2019 CERN.
 ##
 ## Invenio is free software; you can redistribute it and/or
 ## modify it under the terms of the GNU General Public License as
@@ -398,7 +398,7 @@ def task_run_core(name=NAME):
         task_sleep_now_if_required()
 
     # sequence ID to be used in all subsequent tasks
-    sequence_id = str(random.randrange(1, 4294967296))
+    sequence_id = str(random.randrange(1, 2147483648))
     if xml_to_process:
         process_chunk(xml_to_process, sequence_id)
 
