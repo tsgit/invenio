@@ -61,6 +61,8 @@ import sys
 import requests.packages.urllib3
 requests.packages.urllib3.disable_warnings()
 
+from requests.exceptions import HTTPError, Timeout
+
 if sys.hexversion < 0x2060000:
     from md5 import md5
 else:
@@ -466,7 +468,7 @@ def guess_format_from_url(url):
         ## and see the corresponding headers
         try:
             response = open_url(url, head_request=True)
-        except (InvenioBibdocfileUnauthorizedURL, urllib2.URLError):
+        except (InvenioBibdocfileUnauthorizedURL, HTTPError, Timeout):
             return ".bin"
         ext = get_format_from_http_response(response)
         if ext:
@@ -3883,7 +3885,7 @@ def download_external_url(url, docformat=None):
         from_file = open_url(url)
     except InvenioBibdocfileUnauthorizedURL, e:
         raise StandardError, str(e)
-    except urllib2.URLError, e:
+    except (HTTPError, Timeout), e:
         raise StandardError, 'URL could not be opened: %s' % str(e)
 
     # We use redis as a semaphore.
@@ -3936,15 +3938,18 @@ def get_format_from_http_response(response):
     @return: the format of the remote resource
     @rtype: string
     """
-    if hasattr(response, 'info'):
+    if hasattr(response, 'stream'):
+        # HACK: INSPIRE Hack for Labs: requests.raw response
+        content_disposition = response.headers.get('Content-Disposition')
+        content_type = response.headers.get('Content-Type')
+    elif hasattr(response, 'info'):
+        # urllib2.urlopen response
         info = response.info()
         content_disposition = info.getheader('Content-Disposition')
         content_type = info.getheader('Content-Type')
     else:
-        # HACK: INSPIRE Hack for Labs: we are using requests
-        content_disposition = response.headers.get('Content-Disposition')
-        content_type = response.headers.get('Content-Type')
-
+        return ''
+        
     docformat = ''
 
     if content_disposition:
@@ -4834,14 +4839,6 @@ def readfile(filename):
         return ''
 
 
-class HeadRequest(urllib2.Request):
-    """
-    A request object to perform a HEAD request.
-    """
-    def get_method(self):
-        return 'HEAD'
-
-
 def read_cookie(cookiefile):
     """
     Parses a cookie file and returns a string as needed for the urllib2 headers
@@ -4868,10 +4865,10 @@ def open_url(url, headers=None, head_request=False):
     @type url: string
     @param headers: the headers to use
     @type headers: dictionary
-    @param head_request: if True, perform a HEAD request, otherwise a POST
+    @param head_request: if True, perform a HEAD request, otherwise a GET
             request
     @type head_request: boolean
-    @return: a file-like object as returned by urllib2.urlopen.
+    @return: a file-like object as returned by requests.raw.
     """
     # HACK: In order to support fetching files from Labs
     if url.startswith('http://%s/' % CFG_LABS_HOSTNAME) \
@@ -4902,17 +4899,24 @@ def open_url(url, headers=None, head_request=False):
     else:
         headers_to_use = headers
 
-    request_obj = head_request and HeadRequest or urllib2.Request
-    request = request_obj(url)
-    request.add_header('User-Agent', make_user_agent_string('bibdocfile'))
+    req_headers = {}
+    req_headers['User-Agent'] = make_user_agent_string('bibdocfile')
+
     for key, value in headers_to_use.items():
         try:
             value = globals()[value['fnc']](**value['args'])
         except (KeyError, TypeError):
             pass
-        request.add_header(key, value)
+        req_headers[key] = value
 
-    return urllib2.urlopen(request)
+    if head_request:
+        req = requests.head(url, headers=req_headers, stream=True, allow_redirects=True, timeout=30)
+    else:
+        req = requests.get(url, headers=req_headers, stream=True, allow_redirects=True, timeout=30)
+    req.raise_for_status()
+    req.raw.decode_content = True
+
+    return req.raw
 
 
 def update_modification_date_of_file(filepath, modification_date):
