@@ -1,5 +1,5 @@
 ## This file is part of Invenio.
-## Copyright (C) 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013 CERN.
+## Copyright (C) 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2019 CERN.
 ##
 ## Invenio is free software; you can redistribute it and/or
 ## modify it under the terms of the GNU General Public License as
@@ -3515,7 +3515,7 @@ def get_detailed_page_tabs(colID=None, recID=None, ln=CFG_SITE_LANG):
                 continue # ignore attached plots
             else:
                 if CFG_INSPIRE_SITE and not \
-                   abibdoc_type in ('', 'INSPIRE-PUBLIC', 'Supplementary Material'):
+                   abibdoc_type in ('', 'INSPIRE-PUBLIC', 'Supplementary Material', 'SCOAP3'):
                     # ignore non-empty, non-INSPIRE-PUBLIC, non-suppl doctypes for INSPIRE
                     continue
                 # okay, we found at least one non-Plot file:
