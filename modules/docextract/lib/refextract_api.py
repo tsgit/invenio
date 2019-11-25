@@ -2,7 +2,7 @@
 ##
 ## This file is part of Invenio.
 ## Copyright (C) 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014,
-##               2015, 2016 CERN.
+##               2015, 2016, 2019 CERN.
 ##
 ## Invenio is free software; you can redistribute it and/or
 ## modify it under the terms of the GNU General Public License as
@@ -26,15 +26,14 @@ present here can be considered private by the invenio modules.
 
 
 import os
-
-from urllib import urlretrieve
 from tempfile import mkstemp
+import requests
+from requests.exceptions import HTTPError, Timeout
 
 from invenio.refextract_engine import (parse_references,
                                        get_plaintext_document_body,
                                        parse_reference_line,
-                                       get_kbs,
-                                       parse_tagged_reference_line)
+                                       get_kbs)
 from invenio.refextract_text import extract_references_from_fulltext
 from invenio.search_engine_utils import get_fieldvalues
 from invenio.bibindex_tokenizers.BibIndexJournalTokenizer import (
@@ -53,8 +52,6 @@ from invenio.refextract_find import (get_reference_section_beginning,
 from invenio.refextract_text import rebuild_reference_lines
 from invenio.refextract_config import CFG_REFEXTRACT_FILENAME
 from invenio.config import CFG_TMPSHAREDDIR
-from invenio.refextract_tag import tag_reference_line
-
 
 
 class FullTextNotAvailable(Exception):
@@ -77,17 +74,27 @@ def extract_references_from_url_xml(url):
     It raises FullTextNotAvailable if the url gives a 404
     The result is given in marcxml.
     """
-    filename, dummy = urlretrieve(url)
+    response = requests.get(url, stream=True, allow_redirects=True, timeout=30)
+
+    (ftd, filename) = mkstemp(prefix=CFG_REFEXTRACT_FILENAME,
+                              dir=CFG_TMPSHAREDDIR)
+    with os.fdopen(ftd, 'wb') as fd:
+        for chunk in response.iter_content(chunk_size=8192):
+            fd.write(chunk)
+
     try:
-        try:
-            marcxml = extract_references_from_file_xml(filename)
-        except IOError, err:
-            if err.code == 404:
-                raise FullTextNotAvailable()
-            else:
-                raise
+        response.raise_for_status()
+    except (HTTPError, Timeout):
+        if response.status_code == 404:
+            raise FullTextNotAvailable()
+        else:
+            raise
+
+    try:
+        marcxml = extract_references_from_file_xml(filename)
     finally:
         os.remove(filename)
+
     return marcxml
 
 
@@ -113,7 +120,7 @@ def extract_references_from_file(path, recid=None):
 
     docbody, dummy = get_plaintext_document_body(path)
     reflines, dummy, dummy = extract_references_from_fulltext(docbody)
-    if not len(reflines):
+    if not reflines:
         docbody, dummy = get_plaintext_document_body(path, keep_layout=True)
         reflines, dummy, dummy = extract_references_from_fulltext(docbody)
 
@@ -257,7 +264,6 @@ def update_references(recid, overwrite=True):
     temp_file = os.fdopen(temp_fd, 'w')
     temp_file.write(references_xml)
     temp_file.close()
-
     # Update record
     task_low_level_submission('bibupload', 'refextract', '-P', '4',
                               '-c', temp_path)
@@ -339,10 +345,10 @@ def record_can_extract_refs(recid):
 def record_can_overwrite_refs(recid):
     if get_fieldvalues(recid, '999C6v'):
         # References extracted by refextract
-        if 'curator' in  [value.lower().strip() for value in
-                          get_fieldvalues(recid, '999C59',
-                                          repetitive_values=False)
-                          if value.strip()]:
+        if 'curator' in [value.lower().strip() for value in
+                         get_fieldvalues(recid, '999C59',
+                                         repetitive_values=False)
+                         if value.strip()]:
             # They have been curated
             # To put in the HP and create ticket in the future
             needs_submitting = False
