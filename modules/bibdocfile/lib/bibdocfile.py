@@ -3949,7 +3949,7 @@ def get_format_from_http_response(response):
         content_type = info.getheader('Content-Type')
     else:
         return ''
-        
+
     docformat = ''
 
     if content_disposition:

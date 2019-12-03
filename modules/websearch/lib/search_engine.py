@@ -4994,7 +4994,10 @@ def print_record(recID, format='hb', ot='', ln=CFG_SITE_LANG, decompress=zlib.de
                 continue
             if not can_see_hidden and key in CFG_BIBFORMAT_HIDDEN_RECJSON_FIELDS:
                 continue
-            record[key] = recjson.get(key)
+            try:
+                record[key] = recjson.get(key)
+            except IndexError:
+                pass
         # skipkeys is True to skip e.g. the bibdocs key, which is a non
         # primitive object.
         return json.dumps(dict(record), skipkeys=True)

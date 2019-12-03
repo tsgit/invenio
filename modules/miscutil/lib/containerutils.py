@@ -1,5 +1,5 @@
 ## This file is part of Invenio.
-## Copyright (C) 2012 CERN.
+## Copyright (C) 2012, 2019 CERN.
 ##
 ## Invenio is free software; you can redistribute it and/or
 ## modify it under the terms of the GNU General Public License as
@@ -235,6 +235,9 @@ class SmartDict(object):
             else:
                 if chunk is None:
                     chunk = [None, ]
+                if key > 0:
+                    while len(chunk) <= key:
+                        chunk.append(None)
             chunk[key] = setitem(chunk[key])
         else: # dict
             if extend:
