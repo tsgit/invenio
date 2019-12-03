@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # This file is part of Invenio.
-# Copyright (C) 2011, 2012, 2015, 2018 CERN.
+# Copyright (C) 2011, 2012, 2015, 2018, 2019 CERN.
 #
 # Invenio is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License as
@@ -52,6 +52,7 @@ from invenio.webpage import page, pageheaderonly, pagefooteronly
 from invenio.messages import gettext_set_language  # , wash_language
 from invenio.template import load
 from invenio.webinterface_handler import wash_urlargd, WebInterfaceDirectory
+from invenio.webinterface_handler_config import SERVER_RETURN, HTTP_NOT_FOUND
 from invenio.session import get_session
 from invenio.urlutils import redirect_to_url, get_canonical_and_alternates_urls
 from invenio.webuser import (getUid,
@@ -2899,7 +2900,12 @@ class WebInterfaceBibAuthorIDManageProfilePages(WebInterfaceDirectory):
 
         Example: localhost:4000/author/manage_profile/273672/wowow -> 273672
         '''
+        if path is None:
+            return
+
         tokens = path.split('/')
+        if 'manage_profile' not in tokens:
+            return
 
         return tokens[tokens.index('manage_profile') + 1]
 
@@ -2918,6 +2924,8 @@ class WebInterfaceBibAuthorIDManageProfilePages(WebInterfaceDirectory):
         if 'orcid_pid' not in session:
             # I can't assume that pid will be available in session
             identifier = self._get_identifier_from_path(req.referer)
+            if identifier is None:
+                raise SERVER_RETURN(HTTP_NOT_FOUND)
             try:
                 session['orcid_pid'] = get_author_by_canonical_name(identifier)[0][0]
             except:
