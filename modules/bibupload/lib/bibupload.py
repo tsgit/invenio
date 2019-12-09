@@ -2,7 +2,7 @@
 ##
 ## This file is part of Invenio.
 ## Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015,
-##               2016, 2017, 2018 CERN.
+##               2016, 2017, 2018, 2019 CERN.
 ##
 ## Invenio is free software; you can redistribute it and/or
 ## modify it under the terms of the GNU General Public License as
@@ -39,7 +39,10 @@ import urlparse
 import urllib2
 import urllib
 
+from urllib2 import HTTPError
+
 from collections import defaultdict
+from retrying import retry
 
 from invenio.config import CFG_OAI_ID_FIELD, \
      CFG_BIBUPLOAD_EXTERNAL_SYSNO_TAG, \
@@ -2807,6 +2810,13 @@ def writing_rights_p():
         return False
     return True
 
+
+def retry_if_httperror(exception):
+    """ return True if exception is a HTTPError """
+    return isinstance(exception, HTTPError)
+
+
+@retry(retry_on_exception=retry_if_httperror, stop_max_attempt_number=3, wait_random_min=1000, wait_random_max=2000)
 def post_results_to_callback_url(results, callback_url):
     write_message("Sending feedback to %s" % callback_url)
     if not CFG_JSON_AVAILABLE:
