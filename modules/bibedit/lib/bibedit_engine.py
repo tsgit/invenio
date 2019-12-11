@@ -1,5 +1,5 @@
 ## This file is part of Invenio.
-## Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2013, 2018 CERN.
+## Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2013, 2018, 2019 CERN.
 ##
 ## Invenio is free software; you can redistribute it and/or
 ## modify it under the terms of the GNU General Public License as
@@ -1508,7 +1508,11 @@ def perform_request_ref_extract_url(recid, uid, url):
         response['ref_msg'] = """No references were found in the given PDF """
         return response
 
-    ref_bibrecord = create_record(recordExtended)[0]
+    ref_bibrecord, status, error = create_record(recordExtended)
+    if status == 0:
+        response['ref_msg'] = " XML parsing of record failed: %s " % error
+        return response
+
     _add_curated_references_to_record(recid, uid, ref_bibrecord)
 
     response['ref_bibrecord'] = ref_bibrecord
