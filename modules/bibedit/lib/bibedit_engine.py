@@ -1574,7 +1574,10 @@ def perform_request_ref_extract(recid, uid, txt=None):
     if not recordExtended:
         return response
 
-    ref_bibrecord = create_record(recordExtended)[0]
+    ref_bibrecord, status, error = create_record(recordExtended)
+    if status == 0:
+        response['ref_msg'] = " XML parsing of record failed: %s " % error
+        return response
 
     _add_curated_references_to_record(recid, uid, ref_bibrecord)
 
