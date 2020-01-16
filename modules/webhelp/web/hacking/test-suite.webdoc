@@ -1,5 +1,5 @@
 ## This file is part of Invenio.
-## Copyright (C) 2007, 2008, 2010, 2011 CERN.
+## Copyright (C) 2007, 2008, 2010, 2011, 2020 CERN.
 ##
 ## Invenio is free software; you can redistribute it and/or
 ## modify it under the terms of the GNU General Public License as
@@ -488,7 +488,7 @@ concerned with here.</p>
 
 <p>Invenio currently uses the
 <a href="http://www.mozilla.com/en-US/firefox/">Firefox</a> browser
-with the <a href="http://selenium-ide.openqa.org/">Selenium IDE</a>
+with the <a href="https://selenium.dev/selenium-ide/">Selenium IDE</a>
 extension to automatize its real-browser web tests.</p>
 
 <a name="4.2"></a><h3>4.2 Writing web tests</h3>
@@ -562,9 +562,9 @@ tests).  The guidelines were given how to do so.
 <a href="http://c2.com/cgi/wiki?UnitTest">http://c2.com/cgi/wiki?UnitTest</a>
 <a href="http://c2.com/cgi/wiki?RegressionTesting">http://c2.com/cgi/wiki?RegressionTesting</a>
 <a href="http://docs.python.org/lib/module-unittest.html">http://docs.python.org/lib/module-unittest.html</a>
-<a href="http://diveintopython.org/unit_testing/">http://diveintopython.org/unit_testing/</a>
 <a href="http://wwwsearch.sourceforge.net/mechanize/">http://wwwsearch.sourceforge.net/mechanize/</a>
-<a href="http://selenium.openqa.org/">http://selenium.openqa.org/</a>
+<a href="https://realpython.com/python-testing/">https://realpython.com/python-testing/</a>
+<a href="https://selenium.dev/selenium-ide/">https://selenium.dev/selenium-ide/</a>
 </pre>
 </dl>
 
