@@ -74,6 +74,7 @@ def extract_references_from_url_xml(url):
     It raises FullTextNotAvailable if the url gives a 404
     The result is given in marcxml.
     """
+
     response = requests.get(url, stream=True, allow_redirects=True, timeout=30)
 
     (ftd, filename) = mkstemp(prefix=CFG_REFEXTRACT_FILENAME,
@@ -87,8 +88,7 @@ def extract_references_from_url_xml(url):
     except (HTTPError, Timeout):
         if response.status_code == 404:
             raise FullTextNotAvailable()
-        else:
-            raise
+        raise
 
     try:
         marcxml = extract_references_from_file_xml(filename)
