@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##
 ## This file is part of Invenio.
-## Copyright (C) 2010, 2011 CERN.
+## Copyright (C) 2010, 2011, 2020 CERN.
 ##
 ## Invenio is free software; you can redistribute it and/or
 ## modify it under the terms of the GNU General Public License as
@@ -49,6 +49,10 @@ class Field:
                     if len(aleph_spread) > 1:
                         self.add('0',aleph_spread[1])
 
+                    if ord(chunk[0]) > 128:
+                       raise ValueError("subfield not ASCII: `$$%s'" % chunk)
+                    if not re.match('[A-Za-z0-9 ]', chunk[0]):
+                        raise ValueError("invalid subfield: `$$%s'" % chunk[0])
                     self.add(chunk[0], aleph_spread[0]) # add subfield
                     # self.add(chunk[0], chunk[1:])
 
@@ -485,8 +489,8 @@ def main():
             for afile in files:
                 try:
                     transform_file(afile)
-                except ValueError:
-                    print >> sys.stderr, "WARNING: %s skipped" % afile
+                except ValueError, e:
+                    print >> sys.stderr, "WARNING: %s skipped: %s" % (afile, e.message)
         else:
             try:
                 transform_file("-")
