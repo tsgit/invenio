@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##
 ## This file is part of Invenio.
-## Copyright (C) 2005, 2006, 2007, 2008, 2009, 2010, 2011 CERN.
+## Copyright (C) 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2020 CERN.
 ##
 ## Invenio is free software; you can redistribute it and/or
 ## modify it under the terms of the GNU General Public License as
@@ -24,16 +24,18 @@ Exposes document extration facilities to the world
 
 from tempfile import NamedTemporaryFile
 
-from invenio.webinterface_handler import WebInterfaceDirectory
-from invenio.webuser import collect_user_info
-from invenio.webpage import page
-from invenio.config import CFG_TMPSHAREDDIR, CFG_ETCDIR
-from invenio.refextract_api import extract_references_from_file_xml, \
-                                   extract_references_from_url_xml, \
-                                   extract_references_from_string_xml
-from invenio.bibformat import format_record
-
 import invenio.template
+from invenio.bibformat import format_record
+from invenio.config import CFG_ETCDIR, CFG_TMPSHAREDDIR
+from invenio.refextract_api import (FullTextNotAvailable,
+                                    extract_references_from_file_xml,
+                                    extract_references_from_string_xml,
+                                    extract_references_from_url_xml)
+from invenio.webinterface_handler import WebInterfaceDirectory
+from invenio.webpage import page
+from invenio.webuser import collect_user_info
+from requests.exceptions import ConnectionError, HTTPError, Timeout
+
 docextract_templates = invenio.template.load('docextract')
 
 
@@ -128,9 +130,9 @@ class WebInterfaceAPIDocExtract(WebInterfaceDirectory):
 class WebInterfaceDocExtract(WebInterfaceDirectory):
     """DocExtract API"""
     _exports = ['api',
-        ('', 'extract'),
-        ('example.pdf', 'example_pdf'),
-    ]
+                ('', 'extract'),
+                ('example.pdf', 'example_pdf'),
+               ]
 
     api = WebInterfaceAPIDocExtract()
 
@@ -158,7 +160,10 @@ class WebInterfaceDocExtract(WebInterfaceDirectory):
             references_xml = extract_references_from_url_xml(url)
         elif 'url' in form and form['url'].value:
             url = form['url'].value
-            references_xml = extract_references_from_url_xml(url)
+            try:
+                references_xml = extract_references_from_url_xml(url)
+            except (FullTextNotAvailable, ConnectionError, HTTPError, Timeout):
+                references_xml = None
         elif 'txt' in form and form['txt'].value:
             txt = form['txt'].value.decode('utf-8', 'ignore')
             references_xml = extract_references_from_string_xml(txt)
@@ -171,7 +176,7 @@ class WebInterfaceDocExtract(WebInterfaceDirectory):
             out = docextract_templates.tmpl_web_form()
         else:
             references_html = format_record(0,
-                                           'hdref',
+                                            'hdref',
                                             xml_record=references_xml,
                                             user_info=user_info)
             out = docextract_templates.tmpl_web_result(references_html)
