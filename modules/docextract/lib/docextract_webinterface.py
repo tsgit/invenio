@@ -50,9 +50,7 @@ def check_login(req):
 
 def check_url(url):
     """Check that the url we received is not gibberish"""
-    return url.startswith('http://') or \
-           url.startswith('https://') or \
-           url.startswith('ftp://')
+    return url.startswith(('http://', 'https://', 'ftp://'))
 
 
 def extract_from_pdf_string(pdf):
@@ -81,7 +79,10 @@ def make_arxiv_url(arxiv_id):
     Arguments:
     arxiv_id -- the arxiv id of the record to link to
     """
-    return "http://arxiv.org/pdf/%s.pdf" % arxiv_id
+    # basic check for complete URL instead of identifier
+    if arxiv_id.lower() startswith(('http://arxiv.org/', 'https://arxiv.org/')):
+        return arxiv_id
+    return "https://arxiv.org/pdf/%s.pdf" % arxiv_id
 
 
 class WebInterfaceAPIDocExtract(WebInterfaceDirectory):
