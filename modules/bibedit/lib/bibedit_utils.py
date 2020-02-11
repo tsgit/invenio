@@ -1,5 +1,5 @@
 ## This file is part of Invenio.
-## Copyright (C) 2008, 2009, 2010, 2011, 2013 CERN.
+## Copyright (C) 2008, 2009, 2010, 2011, 2013, 2020 CERN.
 ##
 ## Invenio is free software; you can redistribute it and/or
 ## modify it under the terms of the GNU General Public License as
@@ -998,6 +998,10 @@ def get_xml_from_textmarc(recid, textmarc_record, uid=None):
             response['resultXML'] = ""
             response['resultMsg'] = 'textmarc_parsing_error'
             response['parse_error'] = [e.lineno, " ".join(e.linecontent.split()[1:]), e.message]
+        except ValueError, e:
+            response['resultXML'] = ""
+            response['resultMsg'] = 'textmarc_parsing_error'
+            response['parse_error'] = [e.message]
     finally:
         sys.stdout = old_stdout
 

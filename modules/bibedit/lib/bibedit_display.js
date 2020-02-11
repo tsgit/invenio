@@ -1,6 +1,6 @@
 /*
  * This file is part of Invenio.
- * Copyright (C) 2009, 2010, 2011, 2012 CERN.
+ * Copyright (C) 2009, 2010, 2011, 2012, 2020 CERN.
  *
  * Invenio is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -1006,10 +1006,15 @@ function displayMessage(msgCode, keepContent, args) {
             args[0] + '<br />';
         break;
     case 115:
-        msg = 'An error ocurred while parsing the textmarc content: <br /><br />' +
-            'Line: ' + args[0] + '<br /><br />' +
-            '<strong>' + args[1] + '</strong>' + '<br /><br />' +
-            args[2] + '<br />';
+        if (args.length > 1) {
+            msg = 'An error ocurred while parsing the textmarc content: <br /><br />' +
+                'Line: ' + args[0] + '<br /><br />' +
+                '<strong>' + args[1] + '</strong>' + '<br /><br />' +
+                args[2] + '<br />';
+        } else {
+            msg = 'An error ocurred while parsing the textmarc content: <br /><br />' +
+                '<strong>' + args[0] + '</strong>' + '<br /><br />'
+        }
         break;
     default:
         if ( args[0] ) {
