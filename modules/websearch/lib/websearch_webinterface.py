@@ -1,5 +1,5 @@
 ## This file is part of Invenio.
-## Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2019 CERN.
+## Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2019, 2020 CERN.
 ##
 ## Invenio is free software; you can redistribute it and/or
 ## modify it under the terms of the GNU General Public License as
@@ -442,6 +442,11 @@ class WebInterfaceSearchResultsPages(WebInterfaceDirectory):
                                    apache.HTTP_MOVED_PERMANENTLY)
         elif 'Jobs' in involved_collections:
             involved_collections.discard('Jobs')
+        if involved_collections == set(('Conferences',)):
+            return redirect_to_url(req, 'https://labs.inspirehep.net/conferences',
+                                   apache.HTTP_MOVED_PERMANENTLY)
+        elif 'Conferences' in involved_collections:
+            involved_collections.discard('Conferences')
 
         if argd['id'] > 0:
             argd['recid'] = argd['id']
@@ -861,6 +866,9 @@ def display_collection(req, c, aas, verbose, ln, em=""):
     normalised_name = get_coll_normalised_name(c)
     if normalised_name == 'Jobs':
         redirect_to_url(req, 'https://labs.inspirehep.net/jobs',
+                        apache.HTTP_MOVED_PERMANENTLY)
+    if normalised_name == 'Conferences':
+        redirect_to_url(req, 'https://labs.inspirehep.net/conferences',
                         apache.HTTP_MOVED_PERMANENTLY)
     colID = get_colID(normalised_name)
     if type(colID) is not int:

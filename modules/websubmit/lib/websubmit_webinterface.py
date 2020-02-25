@@ -1,5 +1,5 @@
 ## This file is part of Invenio.
-## Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2019 CERN.
+## Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2019, 2020 CERN.
 ##
 ## Invenio is free software; you can redistribute it and/or
 ## modify it under the terms of the GNU General Public License as
@@ -877,6 +877,9 @@ class WebInterfaceSubmitPages(WebInterfaceDirectory):
 
         if args["doctype"].strip() == 'JOBSUBMIT':
             return redirect_to_url(req, 'https://labs.inspirehep.net/submissions/jobs',
+                                   apache.HTTP_MOVED_PERMANENTLY)
+        if args["doctype"].strip() == 'CONFSUBMIT':
+            return redirect_to_url(req, 'https://labs.inspirehep.net/submissions/conferences',
                                    apache.HTTP_MOVED_PERMANENTLY)
 
         ## Strip whitespace from beginning and end of doctype and action:
