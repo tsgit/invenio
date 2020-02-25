@@ -1042,6 +1042,10 @@ class WebInterfaceRSSFeedServicePages(WebInterfaceDirectory):
             return redirect_to_url(req, 'https://labs.inspirehep.net/jobs',
                                    apache.HTTP_GONE)
 
+        if argd['cc'] == 'Conferences' or 'Conferences' in argd['c']:
+            return redirect_to_url(req, 'https://labs.inspirehep.net/conferences',
+                                   apache.HTTP_GONE)
+
         for coll in argd['c'] + [argd['cc']]:
             if collection_restricted_p(coll):
                 (auth_code, auth_msg) = acc_authorize_action(user_info, VIEWRESTRCOLL, collection=coll)
