@@ -2,7 +2,7 @@
 ##
 ## This file is part of Invenio.
 ## Copyright (C) 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013
-##               2014, 2015 CERN.
+##               2014, 2015, 2020 CERN.
 ##
 ## Invenio is free software; you can redistribute it and/or
 ## modify it under the terms of the GNU General Public License as
@@ -156,7 +156,11 @@ def handle_special_journals(citation_elements, kbs):
                 el['volume'] = el['year'][-2:] + '%02d' % int(el['volume'])
             if el['page'].isdigit():
                 # JHEP and JCAP have always pages 3 digits long
-                el['page'] = '%03d' % int(el['page'])
+                # isdigit includes e.g. u'\u00B23455'
+                try:
+                    el['page'] = '%03d' % int(el['page'])
+                except ValueError:
+                    pass
 
     return citation_elements
 
