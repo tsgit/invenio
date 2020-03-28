@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ## This file is part of Invenio.
-## Copyright (C) 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2019 CERN.
+## Copyright (C) 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2019, 2020 CERN.
 ##
 ## Invenio is free software; you can redistribute it and/or
 ## modify it under the terms of the GNU General Public License as
@@ -3355,6 +3355,8 @@ class Template:
                         link_text = urls_z[idx]
                 except IndexError:
                     pass
+                if 'inspirehep.net' in urls_u[idx]:
+                    urls_u[idx] = urls_u[idx].replace('://inspirehep.net/', '://old.inspirehep.net/')
                 out += """<p style="margin-left: 15%%; width: 70%%">
                 <small><strong>%s:</strong> <a href="%s">%s</a></small></p>""" % (link_text, urls_u[idx], urls_u[idx])
 
@@ -3438,6 +3440,8 @@ class Template:
             if url_u.endswith('.png'):
                 images.append(url_u)
             else:
+                if 'inspirehep.net' in url_u:
+                    url_u = url_u.replace('://inspirehep.net/', '://old.inspirehep.net/')
                 non_image_urls_u.append(url_u)
 
         ## unAPI identifier
@@ -4090,6 +4094,8 @@ class Template:
             if not image.endswith('.png'):
                 # huh?
                 continue
+
+            image = image.replace('://inspirehep.net/', '://old.inspirehep.net/')
 
             if len(caption) >= 5:
                 images.append((int(caption[:5]), image, caption[5:], data_urls))
