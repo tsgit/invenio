@@ -438,12 +438,12 @@ class WebInterfaceSearchResultsPages(WebInterfaceDirectory):
         involved_collections.update(argd['c'])
         involved_collections.add(argd['cc'])
         if involved_collections == set(('Jobs',)):
-            return redirect_to_url(req, 'https://labs.inspirehep.net/jobs',
+            return redirect_to_url(req, 'https://inspirehep.net/jobs',
                                    apache.HTTP_MOVED_PERMANENTLY)
         elif 'Jobs' in involved_collections:
             involved_collections.discard('Jobs')
         if involved_collections == set(('Conferences',)):
-            return redirect_to_url(req, 'https://labs.inspirehep.net/conferences',
+            return redirect_to_url(req, 'https://inspirehep.net/conferences',
                                    apache.HTTP_MOVED_PERMANENTLY)
         elif 'Conferences' in involved_collections:
             involved_collections.discard('Conferences')
@@ -517,7 +517,7 @@ class WebInterfaceSearchResultsPages(WebInterfaceDirectory):
 
         if "searchlabs" in form:
             # redirect to labs
-            redirect_to_url(req, 'https://labs.inspirehep.net/literature?q={0}'.format(
+            redirect_to_url(req, 'https://inspirehep.net/literature?q={0}'.format(
                 quote_plus(argd['p'])))
 
         # mod_python does not like to return [] in case when of=id:
@@ -865,10 +865,10 @@ def display_collection(req, c, aas, verbose, ln, em=""):
     # deduce collection id:
     normalised_name = get_coll_normalised_name(c)
     if normalised_name == 'Jobs':
-        redirect_to_url(req, 'https://labs.inspirehep.net/jobs',
+        redirect_to_url(req, 'https://inspirehep.net/jobs',
                         apache.HTTP_MOVED_PERMANENTLY)
     if normalised_name == 'Conferences':
-        redirect_to_url(req, 'https://labs.inspirehep.net/conferences',
+        redirect_to_url(req, 'https://inspirehep.net/conferences',
                         apache.HTTP_MOVED_PERMANENTLY)
     colID = get_colID(normalised_name)
     if type(colID) is not int:
@@ -1039,11 +1039,11 @@ class WebInterfaceRSSFeedServicePages(WebInterfaceDirectory):
         user_info = collect_user_info(req)
 
         if argd['cc'] == 'Jobs' or 'Jobs' in argd['c']:
-            return redirect_to_url(req, 'https://labs.inspirehep.net/jobs',
+            return redirect_to_url(req, 'https://inspirehep.net/jobs',
                                    apache.HTTP_GONE)
 
         if argd['cc'] == 'Conferences' or 'Conferences' in argd['c']:
-            return redirect_to_url(req, 'https://labs.inspirehep.net/conferences',
+            return redirect_to_url(req, 'https://inspirehep.net/conferences',
                                    apache.HTTP_GONE)
 
         for coll in argd['c'] + [argd['cc']]:
