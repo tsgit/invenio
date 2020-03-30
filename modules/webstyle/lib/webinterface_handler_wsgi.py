@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ## This file is part of Invenio.
-## Copyright (C) 2009, 2010, 2011, 2012 CERN.
+## Copyright (C) 2009, 2010, 2011, 2012, 2020 CERN.
 ##
 ## Invenio is free software; you can redistribute it and/or
 ## modify it under the terms of the GNU General Public License as
@@ -268,10 +268,13 @@ class SimulatedModPythonRequest(object):
         return self.__environ['QUERY_STRING']
 
     def get_remote_ip(self):
-        if 'X-FORWARDED-FOR' in self.__headers_in and \
+        if 'X-FORWARDED-FOR' in self.__headers_in and ( \
                self.__headers_in.get('X-FORWARDED-SERVER', '') == \
                self.__headers_in.get('X-FORWARDED-HOST', '') == \
-               urlparse(CFG_SITE_URL)[1]:
+               urlparse(CFG_SITE_URL)[1] or \
+               self.__headers_in.get('X-FORWARDED-SERVER', '') == \
+               self.__headers_in.get('X-FORWARDED-HOST', '') == \
+                'inspirehep.net'):
             # we are using proxy setup
             if self.__environ.get('REMOTE_ADDR') in CFG_WEBSTYLE_REVERSE_PROXY_IPS:
                 # we trust this proxy
