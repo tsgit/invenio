@@ -2,7 +2,7 @@
 ##
 ## This file is part of Invenio.
 ## Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015,
-##               2016, 2017, 2018, 2019 CERN.
+##               2016, 2017, 2018, 2019, 2020 CERN.
 ##
 ## Invenio is free software; you can redistribute it and/or
 ## modify it under the terms of the GNU General Public License as
@@ -1354,6 +1354,7 @@ def synchronize_8564(rec_id, record, record_had_FFT, bibrecdocs, pretend=False):
         """
         write_message('Merging field: %s' % (field, ), verbose=9)
         url = field_get_subfield_values(field, 'u')[:1] or field_get_subfield_values(field, 'q')[:1]
+        url = [u.replace('//inspirehep.net/', '//old.inspirehep.net/') for u in url]
         description = field_get_subfield_values(field, 'y')[:1]
         comment = field_get_subfield_values(field, 'z')[:1]
         if url:
@@ -1453,6 +1454,7 @@ def synchronize_8564(rec_id, record, record_had_FFT, bibrecdocs, pretend=False):
         if field[1] == '4' and field[2] == ' ':
             write_message('Analysing %s' % (field, ), verbose=9)
             for url in field_get_subfield_values(field, 'u') + field_get_subfield_values(field, 'q'):
+                oldurl = url.replace('/inspirehep.net/', '/old.inspirehep.net/')
                 if url in tags8564s_to_add:
                     # there exists a link in the MARC of the record and the connection exists in BibDoc tables
                     if record_had_FFT:
@@ -1460,6 +1462,14 @@ def synchronize_8564(rec_id, record, record_had_FFT, bibrecdocs, pretend=False):
                     else:
                         merge_marc_into_bibdocfile(field, pretend=pretend)
                     del tags8564s_to_add[url]
+                    break
+                elif oldurl in tags8564s_to_add:
+                    # there exists a link in the MARC of the record and the connection exists in BibDoc tables
+                    if record_had_FFT:
+                        merge_bibdocfile_into_marc(field, tags8564s_to_add[oldurl])
+                    else:
+                        merge_marc_into_bibdocfile(field, pretend=pretend)
+                    del tags8564s_to_add[oldurl]
                     break
                 elif bibdocfile_url_p(url) and decompose_bibdocfile_url(url)[0] == rec_id:
                     # The link exists and is potentially correct-looking link to a document
