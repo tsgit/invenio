@@ -2,7 +2,7 @@
 ##
 ## This file is part of Invenio.
 ## Copyright (C) 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013,
-##               2014, 2015, 2016, 2017, 2019 CERN.
+##               2014, 2015, 2016, 2017, 2019, 2020 CERN.
 ##
 ## Invenio is free software; you can redistribute it and/or
 ## modify it under the terms of the GNU General Public License as
@@ -295,7 +295,7 @@ def report_loss(recid, prefix, is_refs):
         Edit it: %(recordeditlink)s
 
         After investigation alert admin to run:
-        $ sudo -u apache /opt/cds-invenio/bin/bibrank -i %(recid)s
+        $ sudo -u apache /opt/cds-invenio/bin/bibrank -i %(recid)s [--disable-citation-losses-check]
 
     """ % {
         "recordlink": "%s/record/%s/%s" % (CFG_SITE_URL, recid, type_of_loss),
