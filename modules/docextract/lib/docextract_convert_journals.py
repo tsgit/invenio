@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##
 ## This file is part of Invenio.
-## Copyright (C) 2013 CERN.
+## Copyright (C) 2013, 2020 CERN.
 ##
 ## Invenio is free software; you can redistribute it and/or
 ## modify it under the terms of the GNU General Public License as
@@ -40,6 +40,20 @@ Command options: %s
 Examples:
     convert_journals -o /home/chayward/thesis-out.xml /home/chayward/thesis.xml
 """ % HELP_MESSAGE
+
+
+def normalize_journal_name(value=None):
+    """normalize journal name via knowledgebase lookup"""
+    if value is None:
+        return ''
+
+    newvalue = re_punctuation.sub(u' ', value.upper())
+    newvalue = re_group_captured_multiple_space.sub(u' ', newvalue)
+    newvalue = newvalue.strip()
+
+    standardized_titles = get_kbs()['journals'][1]
+
+    return standardized_titles.get(newvalue, value)
 
 
 def mangle_value(kb, value):
