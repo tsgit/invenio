@@ -1471,7 +1471,7 @@ def synchronize_8564(rec_id, record, record_had_FFT, bibrecdocs, pretend=False):
                         merge_marc_into_bibdocfile(field, pretend=pretend)
                     del tags8564s_to_add[oldurl]
                     break
-                elif bibdocfile_url_p(url) and decompose_bibdocfile_url(url)[0] == rec_id:
+                elif (bibdocfile_url_p(url) or bibdocfile_url_p(oldurl)) and decompose_bibdocfile_url(url)[0] == rec_id:
                     # The link exists and is potentially correct-looking link to a document
                     # moreover, it refers to current record id ... but it does not exist in
                     # internal BibDoc structures. This could have happen in the case of renaming a document
