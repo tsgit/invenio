@@ -3678,7 +3678,7 @@ def decompose_bibdocfile_url(url):
     """Given a bibdocfile_url return a triple (recid, docname, format)."""
     if url.startswith('%s/getfile.py' % CFG_SITE_URL) or url.startswith('%s/getfile.py' % CFG_SITE_SECURE_URL):
         return decompose_bibdocfile_very_old_url(url)
-
+    url = url.replace('//inspirehep.net/', '//old.inspirehep.net/')
     g = _RE_BIBDOCFILE_URL.match(urllib.unquote(url))
     if g:
         recid = int(g.group('recid'))
