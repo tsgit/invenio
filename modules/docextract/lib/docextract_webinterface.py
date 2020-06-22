@@ -153,13 +153,13 @@ class WebInterfaceDocExtract(WebInterfaceDirectory):
 
         # Handle the 3 POST parameters
         if 'pdf' in form and form['pdf'].value:
-            pdf = form['pdf'].value
+            pdf = form['pdf'].value.strip()
             references_xml = extract_from_pdf_string(pdf)
         elif 'arxiv' in form and form['arxiv'].value:
-            url = make_arxiv_url(arxiv_id=form['arxiv'].value)
+            url = make_arxiv_url(arxiv_id=form['arxiv'].value.strip())
             references_xml = extract_references_from_url_xml(url)
         elif 'url' in form and form['url'].value:
-            url = form['url'].value
+            url = form['url'].value.strip()
             try:
                 references_xml = extract_references_from_url_xml(url)
             except (FullTextNotAvailable, ConnectionError, HTTPError, Timeout):
