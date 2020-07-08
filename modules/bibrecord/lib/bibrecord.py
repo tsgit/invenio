@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##
 ## This file is part of Invenio.
-## Copyright (C) 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013 CERN.
+## Copyright (C) 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2020 CERN.
 ##
 ## Invenio is free software; you can redistribute it and/or
 ## modify it under the terms of the GNU General Public License as
@@ -261,7 +261,8 @@ def record_drop_duplicate_fields(record):
         for full_field in fields:
             field = (tuple(full_field[0]),) + full_field[1:4]
             if field not in current_fields:
-                current_fields.add(field)
+                if tag != '700':
+                    current_fields.add(field)
                 position += 1
                 out[tag].append(full_field[:4] + (position,))
     return out
