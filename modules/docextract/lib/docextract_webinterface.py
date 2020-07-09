@@ -80,7 +80,7 @@ def make_arxiv_url(arxiv_id):
     arxiv_id -- the arxiv id of the record to link to
     """
     # basic check for complete URL instead of identifier
-    if arxiv_id.lower() startswith(('http://arxiv.org/', 'https://arxiv.org/')):
+    if arxiv_id.lower().startswith(('http://arxiv.org/', 'https://arxiv.org/')):
         return arxiv_id
     return "https://arxiv.org/pdf/%s.pdf" % arxiv_id
 
