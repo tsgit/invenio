@@ -876,10 +876,10 @@ class WebInterfaceSubmitPages(WebInterfaceDirectory):
             })
 
         if args["doctype"].strip() == 'JOBSUBMIT':
-            return redirect_to_url(req, 'https://labs.inspirehep.net/submissions/jobs',
+            return redirect_to_url(req, 'https://inspirehep.net/submissions/jobs',
                                    apache.HTTP_MOVED_PERMANENTLY)
         if args["doctype"].strip() == 'CONFSUBMIT':
-            return redirect_to_url(req, 'https://labs.inspirehep.net/submissions/conferences',
+            return redirect_to_url(req, 'https://inspirehep.net/submissions/conferences',
                                    apache.HTTP_MOVED_PERMANENTLY)
 
         ## Strip whitespace from beginning and end of doctype and action:

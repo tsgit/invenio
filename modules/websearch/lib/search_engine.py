@@ -5652,17 +5652,17 @@ def prs_perform_search(kwargs=None, **dummy):
         return out
     if ('Jobs' in kwargs['colls_to_display'] or 'Jobs' in kwargs['colls_to_search']) and kwargs['req']:
         if kwargs['recid'] and kwargs['recid'] > 0:
-            return redirect_to_url(kwargs['req'], 'https://labs.inspirehep.net/jobs/{0}'.format(kwargs['recid']),
+            return redirect_to_url(kwargs['req'], 'https://inspirehep.net/jobs/{0}'.format(kwargs['recid']),
                                    apache.HTTP_MOVED_PERMANENTLY)
         else:
-            return redirect_to_url(kwargs['req'], 'https://labs.inspirehep.net/jobs',
+            return redirect_to_url(kwargs['req'], 'https://inspirehep.net/jobs',
                                    apache.HTTP_MOVED_PERMANENTLY)
     if ('Conferences' in kwargs['colls_to_display'] or 'Conferences' in kwargs['colls_to_search']) and kwargs['req']:
         if kwargs['recid'] and kwargs['recid'] > 0:
-            return redirect_to_url(kwargs['req'], 'https://labs.inspirehep.net/conferences/{0}'.format(kwargs['recid']),
+            return redirect_to_url(kwargs['req'], 'https://inspirehep.net/conferences/{0}'.format(kwargs['recid']),
                                    apache.HTTP_MOVED_PERMANENTLY)
         else:
-            return redirect_to_url(kwargs['req'], 'https://labs.inspirehep.net/conferences',
+            return redirect_to_url(kwargs['req'], 'https://inspirehep.net/conferences',
                                    apache.HTTP_MOVED_PERMANENTLY)
     return prs_search(kwargs=kwargs, **kwargs)
 
