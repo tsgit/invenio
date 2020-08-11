@@ -39,7 +39,7 @@ import urlparse
 import urllib2
 import urllib
 
-from urllib2 import HTTPError
+from urllib2 import HTTPError, URLError
 
 from collections import defaultdict
 from retrying import retry
@@ -2823,10 +2823,10 @@ def writing_rights_p():
 
 def retry_if_httperror(exception):
     """ return True if exception is a HTTPError """
-    return isinstance(exception, HTTPError)
+    return isinstance(exception, (HTTPError, URLError))
 
 
-@retry(retry_on_exception=retry_if_httperror, stop_max_attempt_number=3, wait_random_min=1000, wait_random_max=2000)
+@retry(retry_on_exception=retry_if_httperror, stop_max_attempt_number=4, wait_random_min=1000, wait_random_max=5000)
 def post_results_to_callback_url(results, callback_url):
     write_message("Sending feedback to %s" % callback_url)
     if not CFG_JSON_AVAILABLE:
