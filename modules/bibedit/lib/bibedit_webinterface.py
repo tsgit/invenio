@@ -1,5 +1,5 @@
 ## This file is part of Invenio.
-## Copyright (C) 2009, 2010, 2011 CERN.
+## Copyright (C) 2009, 2010, 2011, 2020 CERN.
 ##
 ## Invenio is free software; you can redistribute it and/or
 ## modify it under the terms of the GNU General Public License as
@@ -160,7 +160,17 @@ class WebInterfaceEditPages(WebInterfaceDirectory):
             # Handle AJAX request.
             json_response.update(perform_request_ajax(req, recid, uid,
                                                       json_data))
-            return json.dumps(json_response)
+            response = {}
+            try:
+                response = json.dumps(json_response)
+            except UnicodeDecodeError:
+                # some tickets contain inline screenshots etc.
+                if text in json_response:
+                    json_response['text'] = "ticket content can't be encoded as utf-8"
+                    response = json.dumps(json_response)
+                else:
+                    raise
+            return response
 
     def compare_revisions(self, req, form):
         """Handle the compare revisions request"""
