@@ -165,7 +165,7 @@ class WebInterfaceEditPages(WebInterfaceDirectory):
                 response = json.dumps(json_response)
             except UnicodeDecodeError:
                 # some tickets contain inline screenshots etc.
-                if text in json_response:
+                if 'text' in json_response:
                     json_response['text'] = "ticket content can't be encoded as utf-8"
                     response = json.dumps(json_response)
                 else:
