@@ -2009,7 +2009,12 @@ def elaborate_fft_tags(record, rec_id, mode, pretend=False,
                             guessed_format = guess_via_magic(downloaded_url)
                             if guessed_format != docformat:
                                 raise RuntimeError("Given URL %s was supposed to refer to format %s but was found to be of format %s. Is this document behind an authentication page?" % (url, docformat, guessed_format))
-                            exit_code, dummy_out, err = run_shell_command("pdfinfo %s", (downloaded_url,))
+                            MUTOOL = '/usr/local/bin/mutool'
+                            if os.path.exists(MUTOOL) and os.access(MUTOOL, os.X_OK) and os.path.isfile(MUTOOL):
+                                PDFTEST = "%s info -M %%s" % (MUTOOL,)
+                            else:
+                                PDFTEST = "pdfinfo %s"
+                            exit_code, dummy_out, err = run_shell_command(PDFTEST, (downloaded_url,))
                             if exit_code:
                                 raise RuntimeError("The provided PDF is corrupted: %s" % err)
                         write_message("%s saved into %s" % (url, downloaded_url), verbose=9)
