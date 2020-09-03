@@ -1,5 +1,5 @@
 ## This file is part of Invenio.
-## Copyright (C) 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2018, 2019 CERN.
+## Copyright (C) 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2018, 2019, 2020 CERN.
 ##
 ## Invenio is free software; you can redistribute it and/or
 ## modify it under the terms of the GNU General Public License as
@@ -123,8 +123,7 @@ from invenio.config import CFG_SITE_URL, \
     CFG_BIBDOCFILE_ADDITIONAL_KNOWN_MIMETYPES, \
     CFG_BIBDOCFILE_PREFERRED_MIMETYPES_MAPPING, \
     CFG_BIBCATALOG_SYSTEM, \
-    CFG_LABS_HOSTNAME, \
-    CFG_LABS_FFT_TOKEN
+    CFG_LABS_HOSTNAME
 from invenio.bibcatalog import BIBCATALOG_SYSTEM
 from invenio.bibdocfile_config import CFG_BIBDOCFILE_ICON_SUBFORMAT_RE, \
     CFG_BIBDOCFILE_DEFAULT_ICON_SUBFORMAT
@@ -4878,7 +4877,6 @@ def open_url(url, headers=None, head_request=False):
                           'https://{0}/'.format(CFG_LABS_HOSTNAME))
         s = requests.Session()
         s.headers['User-Agent'] = make_user_agent_string('bibdocfile')
-        s.headers['Authorization'] = "Bearer {0}".format(CFG_LABS_FFT_TOKEN)
         req = s.get(url, stream=True, verify=False)
         req.raise_for_status()
         req.raw.decode_content = True
