@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##
 ## This file is part of Invenio.
-## Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2013, 2018, 2019 CERN.
+## Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2013, 2018, 2019, 2020 CERN.
 ##
 ## Invenio is free software; you can redistribute it and/or
 ## modify it under the terms of the GNU General Public License as
@@ -455,7 +455,7 @@ def get_mathjax_header(https=False):
 
     return """<script type="text/x-mathjax-config">
 MathJax.Hub.Config({
-  tex2jax: {inlineMath: [['$','$']],
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']],
             processEscapes: true},
   showProcessingMessages: false,
   messageStyle: "none"
