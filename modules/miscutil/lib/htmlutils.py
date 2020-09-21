@@ -455,7 +455,7 @@ def get_mathjax_header(https=False):
 
     return """<script type="text/x-mathjax-config">
 MathJax.Hub.Config({
-  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']],
+  tex2jax: {inlineMath: [['$','$'], ['\\\\(','\\\\)']],
             processEscapes: true},
   showProcessingMessages: false,
   messageStyle: "none"
