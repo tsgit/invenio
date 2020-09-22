@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##
 ## This file is part of Invenio.
-## Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2013, 2016 CERN.
+## Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2013, 2016, 2020 CERN.
 ##
 ## Invenio is free software; you can redistribute it and/or
 ## modify it under the terms of the GNU General Public License as
@@ -545,14 +545,11 @@ def format_with_format_template(format_template_filename, bfo,
     if format_template_filename is None or \
            format_template_filename.endswith("."+CFG_BIBFORMAT_FORMAT_TEMPLATE_EXTENSION):
         # .bft
+        format_content = translate_template(format_content, bfo.lang)
         evaluated_format, needs_2nd_pass = eval_format_template_elements(
                                                         format_content,
                                                         bfo,
                                                         verbose)
-        if not needs_2nd_pass:
-            evaluated_format = translate_template(evaluated_format, bfo.lang)
-
-
     else:
         #.xsl
         if bfo.xml_record:
