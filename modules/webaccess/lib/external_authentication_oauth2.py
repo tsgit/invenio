@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##
 ## This file is part of Invenio.
-## Copyright (C) 2012, 2019 CERN.
+## Copyright (C) 2012, 2019, 2020 CERN.
 ##
 ## Invenio is free software; you can redistribute it and/or
 ## modify it under the terms of the GNU General Public License as
@@ -22,14 +22,17 @@ This module contains functions and methods to authenticate with OAuth2
 providers.
 """
 
-import requests
 from urllib import urlencode
-from rauth.service import process_token_request
 
-from invenio.jsonutils import json, json_unicode_to_utf8
+import requests
 from invenio.config import CFG_SITE_SECURE_URL
-from invenio.external_authentication import ExternalAuth
 from invenio.containerutils import get_substructure
+from invenio.errorlib import register_exception
+from invenio.external_authentication import ExternalAuth
+from invenio.jsonutils import json, json_unicode_to_utf8
+from rauth.service import process_token_request
+from requests.exceptions import HTTPError
+
 
 class ExternalOAuth2(ExternalAuth):
     """
@@ -129,11 +132,17 @@ class ExternalOAuth2(ExternalAuth):
         # Get the access token
         r = provider.get_raw_access_token(method='POST', **kwargs)
 
+        try:
+            r.raise_for_status()
+        except HTTPError as e:
+            register_exception(req=req, prefix='oauth2 token retrieval error: %s' % e)
+
         keys = ['access_token', 'orcid']
         try:
             access_token, orcid = process_token_request(r, json.loads, *keys)
             token_content = {'access_token': access_token, 'orcid': orcid}
         except:
+            req.log_error('oauth2 token parsing failed: %s' % str(req))
             req.g['oauth2_msg'] = 22
             return None, None
 
