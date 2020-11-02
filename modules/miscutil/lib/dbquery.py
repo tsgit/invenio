@@ -1,5 +1,5 @@
 ## This file is part of Invenio.
-## Copyright (C) 2008, 2009, 2010, 2011, 2012, 2013 CERN.
+## Copyright (C) 2008, 2009, 2010, 2011, 2012, 2013, 2020 CERN.
 ##
 ## Invenio is free software; you can redistribute it and/or
 ## modify it under the terms of the GNU General Public License as
@@ -75,6 +75,7 @@ try:
                                        CFG_DATABASE_USER, \
                                        CFG_DATABASE_PASS, \
                                        CFG_DATABASE_SLAVE, \
+                                       CFG_DATABASE_SLAVE_PORT, \
                                        CFG_DATABASE_SLAVE_SU_USER, \
                                        CFG_DATABASE_SLAVE_SU_PASS, \
                                        CFG_DATABASE_PASSWORD_FILE
@@ -85,6 +86,7 @@ except ImportError:
     CFG_DATABASE_USER = 'invenio'
     CFG_DATABASE_PASS = 'my123p$ss'
     CFG_DATABASE_SLAVE = ''
+    CFG_DATABASE_SLAVE_PORT = ''
     CFG_DATABASE_SLAVE_SU_USER = ''
     CFG_DATABASE_SLAVE_SU_PASS = ''
     CFG_DATABASE_PASSWORD_FILE = ''
@@ -115,12 +117,15 @@ def get_connection_for_dump_on_slave():
     Return a valid connection, suitable to perform dump operation
     on a slave node of choice.
     """
+    dbport = int(CFG_DATABASE_PORT)
+    if CFG_DATABASE_SLAVE_PORT:
+        dbport = int(CFG_DATABASE_SLAVE_PORT)
     connection = connect(host=CFG_DATABASE_SLAVE,
-                                         port=int(CFG_DATABASE_PORT),
-                                         db=CFG_DATABASE_NAME,
-                                         user=CFG_DATABASE_SLAVE_SU_USER,
-                                         passwd=CFG_DATABASE_SLAVE_SU_PASS,
-                                         use_unicode=False, charset='utf8')
+                         port=dbport,
+                         db=CFG_DATABASE_NAME,
+                         user=CFG_DATABASE_SLAVE_SU_USER,
+                         passwd=CFG_DATABASE_SLAVE_SU_PASS,
+                         use_unicode=False, charset='utf8')
     connection.autocommit(True)
     return connection
 
@@ -156,20 +161,26 @@ def _db_login(dbhost=CFG_DATABASE_HOST, relogin=0):
     ## older MySQLdb versions here, since we are recommending to
     ## upgrade to more recent versions anyway.
 
+    dbport = int(CFG_DATABASE_PORT)
+    if dbhost == CFG_DATABASE_SLAVE and CFG_DATABASE_SLAVE_PORT:
+        dbport = int(CFG_DATABASE_SLAVE_PORT)
+
     if CFG_MISCUTIL_SQL_USE_SQLALCHEMY:
-        return connect(host=dbhost, port=int(CFG_DATABASE_PORT),
-                       db=CFG_DATABASE_NAME, user=CFG_DATABASE_USER,
+        return connect(host=dbhost,
+                       port=dbport,
+                       db=CFG_DATABASE_NAME,
+                       user=CFG_DATABASE_USER,
                        passwd=CFG_DATABASE_PASS,
                        use_unicode=False, charset='utf8')
     else:
         thread_ident = (os.getpid(), get_ident())
     if relogin:
         connection = _DB_CONN[dbhost][thread_ident] = connect(host=dbhost,
-                                         port=int(CFG_DATABASE_PORT),
-                                         db=CFG_DATABASE_NAME,
-                                         user=CFG_DATABASE_USER,
-                                         passwd=CFG_DATABASE_PASS,
-                                         use_unicode=False, charset='utf8')
+                                                              port=dbport,
+                                                              db=CFG_DATABASE_NAME,
+                                                              user=CFG_DATABASE_USER,
+                                                              passwd=CFG_DATABASE_PASS,
+                                                              use_unicode=False, charset='utf8')
         connection.autocommit(True)
         return connection
     else:
@@ -177,11 +188,11 @@ def _db_login(dbhost=CFG_DATABASE_HOST, relogin=0):
             return _DB_CONN[dbhost][thread_ident]
         else:
             connection = _DB_CONN[dbhost][thread_ident] = connect(host=dbhost,
-                                             port=int(CFG_DATABASE_PORT),
-                                             db=CFG_DATABASE_NAME,
-                                             user=CFG_DATABASE_USER,
-                                             passwd=CFG_DATABASE_PASS,
-                                             use_unicode=False, charset='utf8')
+                                                                  port=dbport,
+                                                                  db=CFG_DATABASE_NAME,
+                                                                  user=CFG_DATABASE_USER,
+                                                                  passwd=CFG_DATABASE_PASS,
+                                                                  use_unicode=False, charset='utf8')
             connection.autocommit(True)
             return connection
 
