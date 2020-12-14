@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##
 ## This file is part of Invenio.
-## Copyright (C) 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2013, 2018 CERN.
+## Copyright (C) 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2013, 2018, 2020 CERN.
 ##
 ## Invenio is free software; you can redistribute it and/or
 ## modify it under the terms of the GNU General Public License as
@@ -388,7 +388,7 @@ def register_exception(stream='error',
     try:
         if CFG_ERRORLIB_SENTRY_URI:
             from raven import Client
-            client = Client(CFG_ERRORLIB_SENTRY_URI)
+            client = Client(CFG_ERRORLIB_SENTRY_URI + '?verify_ssl=0')
             try:
                 if req:
                     from invenio.webuser import collect_user_info
