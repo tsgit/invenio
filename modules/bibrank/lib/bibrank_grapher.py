@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##
 ## This file is part of Invenio.
-## Copyright (C) 2005, 2006, 2007, 2008, 2010, 2011, 2013 CERN.
+## Copyright (C) 2005, 2006, 2007, 2008, 2010, 2011, 2013, 2020 CERN.
 ##
 ## Invenio is free software; you can redistribute it and/or
 ## modify it under the terms of the GNU General Public License as
@@ -30,6 +30,7 @@ from invenio.config import (CFG_TMPSHAREDDIR, CFG_WEBDIR, CFG_SITE_URL,
 CFG_GNUPLOT_AVAILABLE = 1
 try:
     import Gnuplot
+    Gnuplot.GnuplotOpts.default_term = 'png'
 except ImportError, e:
     CFG_GNUPLOT_AVAILABLE = 0
 
