@@ -40,6 +40,7 @@ import urllib2
 import urllib
 
 from urllib2 import HTTPError, URLError
+from ssl import SSLError
 
 from collections import defaultdict
 from retrying import retry
@@ -2828,7 +2829,7 @@ def writing_rights_p():
 
 def retry_if_httperror(exception):
     """ return True if exception is a HTTPError """
-    return isinstance(exception, (HTTPError, URLError))
+    return isinstance(exception, (HTTPError, URLError, SSLError))
 
 
 @retry(retry_on_exception=retry_if_httperror, stop_max_attempt_number=4, wait_random_min=1000, wait_random_max=5000)
