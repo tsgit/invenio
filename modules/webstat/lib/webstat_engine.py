@@ -1,5 +1,5 @@
 ## This file is part of Invenio.
-## Copyright (C) 2007, 2008, 2010, 2011, 2013 CERN.
+## Copyright (C) 2007, 2008, 2010, 2011, 2013, 2020 CERN.
 ##
 ## Invenio is free software; you can redistribute it and/or
 ## modify it under the terms of the GNU General Public License as
@@ -2042,6 +2042,7 @@ def create_graph_trend_gnu_plot(trend, path, settings):
     """Creates the graph trend using the GNU plot library"""
     try:
         import Gnuplot
+        Gnuplot.GnuplotOpts.default_term = 'png'
     except ImportError:
         return
 
