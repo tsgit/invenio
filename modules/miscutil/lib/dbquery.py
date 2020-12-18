@@ -69,22 +69,28 @@ else:
 ## FIXME: this is more of a blast-from-the-past that should be fixed
 ## both here and in inveniocfg when the time permits.
 try:
-    from invenio.dbquery_config import CFG_DATABASE_HOST, \
-                                       CFG_DATABASE_PORT, \
-                                       CFG_DATABASE_NAME, \
-                                       CFG_DATABASE_USER, \
-                                       CFG_DATABASE_PASS, \
-                                       CFG_DATABASE_SLAVE, \
-                                       CFG_DATABASE_SLAVE_PORT, \
-                                       CFG_DATABASE_SLAVE_SU_USER, \
-                                       CFG_DATABASE_SLAVE_SU_PASS, \
-                                       CFG_DATABASE_PASSWORD_FILE
+    from invenio.dbquery_config import (
+        CFG_DATABASE_HOST,
+        CFG_DATABASE_PORT,
+        CFG_DATABASE_NAME,
+        CFG_DATABASE_USER,
+        CFG_DATABASE_PASS)
 except ImportError:
     CFG_DATABASE_HOST = 'localhost'
     CFG_DATABASE_PORT = '3306'
     CFG_DATABASE_NAME = 'invenio'
     CFG_DATABASE_USER = 'invenio'
     CFG_DATABASE_PASS = 'my123p$ss'
+
+try:
+    from invenio.dbquery_config import (
+        CFG_DATABASE_SLAVE,
+        CFG_DATABASE_SLAVE_PORT,
+        CFG_DATABASE_SLAVE_SU_USER,
+        CFG_DATABASE_SLAVE_SU_PASS,
+        CFG_DATABASE_PASSWORD_FILE
+    )
+except ImportError:
     CFG_DATABASE_SLAVE = ''
     CFG_DATABASE_SLAVE_PORT = ''
     CFG_DATABASE_SLAVE_SU_USER = ''
