@@ -1565,7 +1565,10 @@ def _create_record_lxml(marcxml,
         subfield_iterator = datafield.iter(tag='subfield')
         for subfield in subfield_iterator:
             code = subfield.attrib.get('code', '!').encode("UTF-8")
-            text = subfield.text
+            if len(subfield) > 0:
+                text = ''.join(subfield.itertext())
+            else:
+                text = subfield.text
             if text is None:
                 text = ''
             else:
