@@ -1526,6 +1526,7 @@ def _create_record_lxml(marcxml,
                    '<!DOCTYPE collection SYSTEM "file://%s">\n'
                    '<collection>\n%s\n</collection>' \
                    % (CFG_MARC21_DTD, marcxml))
+
     try:
         tree = etree.parse(StringIO(marcxml), parser)
         # parser errors are located in parser.error_log
@@ -1534,6 +1535,8 @@ def _create_record_lxml(marcxml,
         # if verbose >3 then an exception will be thrown
     except Exception, e:
         raise InvenioBibRecordParserError(str(e))
+
+    NSMAP = {'mml': 'http://www.w3.org/1998/Math/MathML'}
 
     record = {}
     field_position_global = 0
@@ -1566,7 +1569,13 @@ def _create_record_lxml(marcxml,
         for subfield in subfield_iterator:
             code = subfield.attrib.get('code', '!').encode("UTF-8")
             if len(subfield) > 0:
-                text = ''.join(subfield.itertext())
+                if subfield.find('.//math') is not None \
+                   or subfield.find('.//mml:math', namespaces=NSMAP) is not None:
+                    # preserve child tags for MathML content
+                    text = ''.join([subfield.text or ''] +
+                                   [etree.tostring(c, encoding='unicode') for c in subfield])
+                else:
+                    text = ''.join(subfield.itertext())
             else:
                 text = subfield.text
             if text is None:
