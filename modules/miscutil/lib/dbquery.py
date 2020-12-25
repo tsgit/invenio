@@ -426,61 +426,28 @@ def get_table_update_time(tablename, run_on_slave=False):
        wildcard `%' in which case we return the maximum update time
        value.
     """
-    # Note: in order to work with all of MySQL 4.0, 4.1, 5.0, this
-    # function uses SHOW TABLE STATUS technique with a dirty column
-    # position lookup to return the correct value.  (Making use of
-    # Index_Length column that is either of type long (when there are
-    # some indexes defined) or of type None (when there are no indexes
-    # defined, e.g. table is empty).  When we shall use solely
-    # MySQL-5.0, we can employ a much cleaner technique of using
-    # SELECT UPDATE_TIME FROM INFORMATION_SCHEMA.TABLES WHERE
-    # table_name='collection'.
-    res = run_sql("SHOW TABLE STATUS LIKE %s", (tablename,),
-                  run_on_slave=run_on_slave)
-    update_times = [] # store all update times
-    for row in res:
-        if type(row[10]) is long or \
-           row[10] is None:
-            # MySQL-4.1 and 5.0 have creation_time in 11th position,
-            # so return next column:
-            update_times.append(str(row[12]))
-        else:
-            # MySQL-4.0 has creation_time in 10th position, which is
-            # of type datetime.datetime or str (depending on the
-            # version of MySQLdb), so return next column:
-            update_times.append(str(row[11]))
-    return max(update_times)
+    res = run_sql("SELECT UPDATE_TIME FROM information_schema.tables " +
+                  "WHERE TABLE_SCHEMA = %s AND TABLE_NAME LIKE %s",
+                  (CFG_DATABASE_NAME, tablename), run_on_slave=run_on_slave)
+    if res:
+        return str(max([d[0] for d in res]))
+
+    return ''
+
 
 def get_table_status_info(tablename, run_on_slave=False):
     """Return table status information on TABLENAME.  Returned is a
        dict with keys like Name, Rows, Data_length, Max_data_length,
        etc.  If TABLENAME does not exist, return empty dict.
     """
-    # Note: again a hack so that it works on all MySQL 4.0, 4.1, 5.0
-    res = run_sql("SHOW TABLE STATUS LIKE %s", (tablename,),
-                  run_on_slave=run_on_slave)
-    table_status_info = {} # store all update times
-    for row in res:
-        if type(row[10]) is long or \
-           row[10] is None:
-            # MySQL-4.1 and 5.0 have creation time in 11th position:
-            table_status_info['Name'] = row[0]
-            table_status_info['Rows'] = row[4]
-            table_status_info['Data_length'] = row[6]
-            table_status_info['Max_data_length'] = row[8]
-            table_status_info['Create_time'] = row[11]
-            table_status_info['Update_time'] = row[12]
-        else:
-            # MySQL-4.0 has creation_time in 10th position, which is
-            # of type datetime.datetime or str (depending on the
-            # version of MySQLdb):
-            table_status_info['Name'] = row[0]
-            table_status_info['Rows'] = row[3]
-            table_status_info['Data_length'] = row[5]
-            table_status_info['Max_data_length'] = row[7]
-            table_status_info['Create_time'] = row[10]
-            table_status_info['Update_time'] = row[11]
-    return table_status_info
+    res = run_sql("SELECT TABLE_NAME, TABLE_ROWS, DATA_LENGTH, MAX_DATA_LENGTH, CREATE_TIME, UPDATE_TIME " +
+                  "FROM information_schema.tables WHERE TABLE_SCHEMA = %s AND TABLE_NAME LIKE %s",
+                  (CFG_DATABASE_NAME, tablename), run_on_slave=run_on_slave)
+    if res:
+        status_info = dict(zip(['Name', 'Rows', 'Data_length', 'Max_data_length', 'Create_time', 'Update_time'], res[0]))
+        return status_info
+
+    return {}
 
 def serialize_via_marshal(obj):
     """Serialize Python object via marshal into a compressed string."""
