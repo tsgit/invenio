@@ -1,7 +1,7 @@
 ## -*- mode: python; coding: utf-8; -*-
 ##
 ## This file is part of Invenio.
-## Copyright (C) 2010, 2011, 2012 CERN.
+## Copyright (C) 2010, 2011, 2012, 2020 CERN.
 ##
 ## Invenio is free software; you can redistribute it and/or
 ## modify it under the terms of the GNU General Public License as
@@ -200,14 +200,24 @@ def get_data_for_definition_bibrec(column_name, recids_copy):
     mapping each recids with its correspondig value from the column'''
     if column_name == 'id':
         ## short-cut for recids:
-        return dict(map(lambda x: (x,x), recids_copy))
-    dict_column = {}
-    for recid in recids_copy:
-        creation_date = run_sql('SELECT %s from bibrec WHERE id = %%s' %column_name, (recid, ))[0][0]
-        new_creation_date = datetime(creation_date.year,creation_date.month,creation_date.day, \
-                                     creation_date.hour,creation_date.minute, creation_date.second)
-        dict_column[recid] = new_creation_date.strftime('%Y%m%d%H%M%S')
-    return dict_column
+        return dict(((x,x) for x in recids_copy))
+    if len(recids_copy) < 400:
+        res = run_sql('SELECT id, DATE_FORMAT(%s, "%%Y%%m%%d%%H%%i%%S") FROM bibrec WHERE id in (%s)'
+                      % (column_name, ','.join((str(r) for r in recids_copy)),))
+    elif max(recids_copy) - min(recids_copy) < 4000:
+        res = run_sql('SELECT id, DATE_FORMAT(%s, "%%Y%%m%%d%%H%%i%%S") FROM bibrec WHERE id >= %s AND id <= %s'
+                      % (column_name, min(recids_copy), max(recids_copy),))
+        res = [c for c in res if c[0] in recids_copy]
+    else:
+        res = run_sql('SELECT id, DATE_FORMAT(%s, "%%Y%%m%%d%%H%%i%%S") FROM bibrec'
+                      % column_name)
+        deleted = search_pattern(p='980__:"DELETED"')
+        res = dict(res)
+        for id in deleted:
+            res.pop(id)
+    # use modified invenio.datetime to accommodate years before 1900
+    # dict_column = dict((id, datetime(d.year, d.month, d.day, d.hour, d.minute, d.second).strftime('%Y%m%d%H%M%S')) for id, d in res)
+    return dict(res)
 
 
 def get_field_data(recids, method_name, definition):
