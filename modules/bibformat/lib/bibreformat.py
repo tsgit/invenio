@@ -1,7 +1,7 @@
 ## -*- mode: python; coding: utf-8; -*-
 ##
 ## This file is part of Invenio.
-## Copyright (C) 2007, 2008, 2010, 2011, 2012, 2019 CERN.
+## Copyright (C) 2007, 2008, 2010, 2011, 2012, 2019, 2021 CERN.
 ##
 ## Invenio is free software; you can redistribute it and/or
 ## modify it under the terms of the GNU General Public License as
@@ -281,10 +281,10 @@ def outdated_caches(fmt, last_updated, chunk_size=2000000):
              AND br.id BETWEEN %s AND %s"""
 
     random.seed()
-    if random.random() < 0.98:
+    if random.random() < 0.99:
         tdelta = timedelta(hours=4)
     else:
-        tdelta = timedelta(days=365)
+        tdelta = timedelta(days=90)
 
     last_updated_str = (last_updated - tdelta).strftime('%Y-%m-%d %H:%M:%S')
     write_message("Querying database for outdated cache since %s" % last_updated_str)
