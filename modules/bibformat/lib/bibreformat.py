@@ -281,7 +281,7 @@ def outdated_caches(fmt, last_updated, chunk_size=2000000):
              AND br.id BETWEEN %s AND %s"""
 
     random.seed()
-    if random.random() < 0.99:
+    if random.random() < 0.996:
         tdelta = timedelta(hours=4)
     else:
         tdelta = timedelta(days=90)
